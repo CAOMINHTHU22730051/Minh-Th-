@@ -1,0 +1,83 @@
+#include <iostream>
+#include <windows.h>
+#include <conio.h>
+
+
+using namespace std;
+
+void gotoxy(int x,int y)
+{
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD a = {x, y};
+    SetConsoleCursorPosition(h, a);
+}
+
+struct Point
+{
+    int x;
+    int y;
+};
+
+struct Snake
+{
+    Point sn[100];
+    int legth;
+};
+
+void taoSnake(Snake &snake)
+{
+    snake.legth = 3;
+    snake.sn[0].x = 16;
+    snake.sn[0].y = 10;
+    snake.sn[1].x = 15;
+    snake.sn[1].y = 10;
+    snake.sn[2].x = 14;
+    snake.sn[2].y = 10;
+}
+
+void hienThi(Snake snake)
+{
+    system("cls");
+    for(int i = 0; i < snake.legth; i++)
+    {
+        gotoxy(snake.sn[i].x,snake.sn[i].y);
+        if(i == 0)
+            cout << "O";
+        else
+            cout << "+";
+    }
+}
+
+void diChuyen(Snake &snake, int huong)
+{
+    for(int i = snake.legth - 1 ; i > 0; i--)
+    {
+        snake.sn[i] = snake.sn[i - 1];
+    }
+    if (huong == 0) snake.sn[0].x = snake.sn[0].x + 1;
+    if (huong == 1) snake.sn[0].y = snake.sn[0].y + 1;
+    if (huong == 2) snake.sn[0].x = snake.sn[0].x - 1;
+    if (huong == 3) snake.sn[0].y = snake.sn[0].y - 1;
+}
+
+int main()
+{
+    Snake snake;
+    taoSnake(snake);
+    int huong = 1;
+    char ch;
+    while (true)
+    {
+        if (kbhit())
+        {
+            ch = getch();
+            if (ch == 'a') huong = 2;
+            if (ch == 'w') huong = 3;
+            if (ch == 'd') huong = 0;
+            if (ch == 's') huong = 1;
+        }
+        diChuyen(snake, huong);
+        hienThi(snake);
+    }
+    return 0;
+}
